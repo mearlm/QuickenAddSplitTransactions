@@ -47,6 +47,14 @@ is quite slow (~1.3 seconds per new/split transaction entry).
       destination account.  If there are errors, the imported transaction set can be easily deleted,
       the command file updated, and the import redone.
 
+	  NB: The account display needs to be specified correctly for the import tool to work.  The tool will assume the
+	  import account shows the Date, Payee, Category, Transfer, and Amount columns from the left, and will fail if
+      other arrangements are used because the tool is positonal rather than based on, e.g., column name.  This is
+      another reason to inport into an Upload-specific account:  the Quicke Move Transaction command can reconfigure
+      the data as appropriate for whatever account layout you prefer, but this insertion automation depends on
+      the data enttry columns being as described.  Note that additional columns to the right are irrelevant, as
+      the tool only injects values for the fields named.
+
 2. Run the script using the macOS Script Editor or your preferred script launcher, or as a binary appllcation (my preference).
       You will likely need to tweek the Privacy & Security settings for the script to execute properly:
          Accessibility: enabled
