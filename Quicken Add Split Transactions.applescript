@@ -1,3 +1,4 @@
+-- Version #1.0
 -- 1. FILE PICKER & INITIAL PATH SETTING
 try
 	set downloadsPath to (path to downloads folder)
