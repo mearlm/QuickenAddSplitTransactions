@@ -1,0 +1,75 @@
+Yes — that’s a sensible packaging model.
+
+I’d treat `__GIT_VERSION__` as a **build-time placeholder** in every user-visible artifact that should identify the release:
+
+```text
+Quicken Add Split Transaction.applescript
+README.md
+```
+
+Then the packaging step:
+
+1. gets the version from `git describe`;
+2. copies source files into a temporary build directory;
+3. replaces `__GIT_VERSION__` in those copies;
+4. exports/builds the `.app`;
+5. drops the stamped `README.md` into the app bundle;
+6. optionally names the release artifact with the same version.
+
+For the README inside the app bundle, I’d put it somewhere like:
+
+```text
+Quicken Add Split Transaction.app/
+    Contents/
+        Resources/
+            README.md
+```
+
+That is the natural place for ancillary packaged resources. I would avoid placing it beside `Info.plist` or `MacOS`; `Contents/Resources` is intended for exactly this sort of supporting material.
+
+A future packaging script could conceptually do:
+
+```bash
+VERSION=$(git describe --tags --always --dirty)
+
+rm -rf build
+mkdir -p build
+
+sed "s/__GIT_VERSION__/$VERSION/g" \
+  "AppleScript/Quicken Add Split Transaction.applescript" \
+  > "build/Quicken Add Split Transaction.applescript"
+
+sed "s/__GIT_VERSION__/$VERSION/g" \
+  README.md \
+  > build/README.md
+```
+
+Then after Script Editor exports the application:
+
+```bash
+cp build/README.md \
+  "/Applications/Quicken Add Split Transaction.app/Contents/Resources/README.md"
+```
+
+I’d probably eventually go one step further and have the package also carry a tiny plain-text file such as:
+
+```text
+VERSION
+```
+
+containing only:
+
+```text
+v1.0
+```
+
+That gives you a dead-simple machine-readable release identifier if you ever want another script to inspect the installed version without parsing AppleScript or README text.
+
+And this starts giving you a clean distinction between:
+
+**repository source** — contains `__GIT_VERSION__`
+**build/package** — contains the resolved version
+**installed app** — immutable release artifact
+
+That’s a very conventional and maintainable direction.
+

@@ -1,4 +1,5 @@
--- Version #1.0
+property scriptVersion : "__GIT_VERSION__"
+
 -- 1. FILE PICKER & INITIAL PATH SETTING
 try
 	set downloadsPath to (path to downloads folder)
@@ -256,7 +257,7 @@ end try
 
 
 -- 5. SUCCESS NOTIFICATION
-display dialog "✅ Data entry automation sequence completed successfully!" & return & return & "Processed " & txCount & " transactions cleanly into your register. " & archiveStatus buttons {"Finished"} default button 1
+display dialog "✅ Data entry automation sequence completed successfully!" & return scriptVersion & return & "Processed " & txCount & " transactions cleanly into your register. " & archiveStatus buttons {"Finished"} default button 1
 
 
 ---------------------------------------------------------------------
