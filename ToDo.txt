@@ -73,3 +73,14 @@ And this starts giving you a clean distinction between:
 
 That’s a very conventional and maintainable direction.
 
+
+==================================================================
+REVISIONS FOR EXCEL EXPORTER AND APPLESCRIPT TRANSACTION IMPORTER:
+==================================================================
+I think the right move is to freeze the current importer mentally as **v1: proven and useful**, finish the accounting work, then make the record-format cleanup as a deliberate v2 change rather than continuing to evolve it in the middle of reconciliation.
+
+The direction is clear: fixed-width command records, optional fields represented by blanks, VBA doing the business-rule complexity, and AppleScript reduced to a very boring executor. Something like `Split,Category,Transfer,Amount,Memo` is much easier to validate, document, and extend later without piling special cases into the importer.
+
+And the nice part is that nothing you’ve learned gets discarded. The current command grammar, preflight checks, transfer handling, Git versioning, and full-month test all become the foundation. The next revision is refinement, not another experiment.
+
+Also add transaction splits for Withholding and related Payout fields (e.g. Chargebacks) with AMA Category until reviewed.  This ensures that the account can balance, but we have traceability on these unexpected/unusual charges.  Requires changes in the Excel Toast transaction exporter.  These can utilize the new memo field if we can get additional "reason" information out of the Toast payout report.
